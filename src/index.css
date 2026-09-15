@@ -374,13 +374,17 @@ button {
   letter-spacing: -0.5px;
 }
 
+.dashboard-intro .eyebrow {
+  color: #1597e5;
+}
+
 .dashboard-word {
   display: inline-block;
   max-width: 0;
   overflow: hidden;
   vertical-align: bottom;
-  color: #6ca6cf;
-  border-right: 2px solid #6ca6cf;
+  color: #1597e5;
+  border-right: 2px solid #1597e5;
   animation:
     dashboard-word-typing 4.8s steps(10, end) infinite,
     dashboard-word-cursor 0.75s step-end infinite;
@@ -404,7 +408,7 @@ button {
 @keyframes dashboard-word-cursor {
   0%,
   100% {
-    border-color: #6ca6cf;
+    border-color: #1597e5;
   }
   50% {
     border-color: transparent;
@@ -3555,7 +3559,7 @@ html.light-mode .dashboard-intro p {
   color: #53675d;
 }
 html.light-mode .dashboard-intro .eyebrow {
-  color: #078930;
+  color: #1597e5;
 }
 html.light-mode .live-indicator {
   background: #edf7f0;
@@ -7383,17 +7387,12 @@ html.light-mode .notification-count {
   color: #fff36b !important;
 }
 
-.dashboard-grid .dashboard-card:nth-child(2)::before,
 .dashboard-grid .dashboard-card:nth-child(3)::before,
 .statistics-card:nth-child(2)::before,
 .severity-bar-segment.medium,
 .statistics-indicator.medium,
 .severity-legend .statistics-indicator.medium {
   background: var(--warning-yellow) !important;
-}
-
-.dashboard-grid .dashboard-card:nth-child(2)::before {
-  background: var(--card-accent) !important;
 }
 
 .severity-badge.medium,
@@ -7427,21 +7426,12 @@ html.light-mode .theme-toggle:hover {
   color: #9a7112 !important;
 }
 
-html.light-mode .dashboard-grid .dashboard-card:nth-child(2)::before,
 html.light-mode .dashboard-grid .dashboard-card:nth-child(3)::before,
 html.light-mode .statistics-card:nth-child(2)::before,
 html.light-mode .severity-bar-segment.medium,
 html.light-mode .statistics-indicator.medium,
 html.light-mode .severity-legend .statistics-indicator.medium {
   background: var(--warning-yellow-soft) !important;
-}
-
-html.light-mode .dashboard-grid .dashboard-card:nth-child(2)::before {
-  background: linear-gradient(
-    90deg,
-    #078930 0 50%,
-    var(--warning-yellow-soft) 50% 100%
-  ) !important;
 }
 
 html.light-mode .severity-badge.medium,
@@ -7573,8 +7563,8 @@ html.light-mode .user-item:hover {
 
 .dashboard-word,
 html.light-mode .dashboard-word {
-  color: #82d4ff !important;
-  border-right-color: #82d4ff !important;
+  color: #1597e5 !important;
+  border-right-color: #1597e5 !important;
 }
 
 @media (max-width: 700px) {
