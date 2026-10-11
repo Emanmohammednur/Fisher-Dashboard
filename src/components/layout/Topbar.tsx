@@ -125,11 +125,6 @@ function Topbar() {
       </div>
 
       <div className="topbar-actions">
-        <div className="system-status">
-          <span className="status-dot"></span>
-          <span>System Online</span>
-        </div>
-
         <button
           type="button"
           className="theme-toggle"
