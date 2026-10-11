@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import {
   AlertIcon,
@@ -82,22 +82,61 @@ function getSectionFromHash(): Section {
 function Sidebar() {
   const [activeSection, setActiveSection] =
     useState<Section>(getSectionFromHash);
+  const navigationRef = useRef<HTMLElement>(null);
+  const activeIndicatorRef = useRef<HTMLSpanElement>(null);
 
-  useEffect(() => {
-    const handleHashChange = () => {
-      setActiveSection(getSectionFromHash());
+  useLayoutEffect(() => {
+    const updateIndicator = () => {
+      const navigation = navigationRef.current;
+      const indicator = activeIndicatorRef.current;
+      const activeItem =
+        navigation?.querySelector<HTMLElement>(".nav-item.active");
+
+      if (!navigation || !indicator || !activeItem) {
+        return;
+      }
+
+      indicator.style.height = `${activeItem.offsetHeight}px`;
+      indicator.style.transform = `translateY(${activeItem.offsetTop}px)`;
     };
 
-    window.addEventListener("hashchange", handleHashChange);
+    updateIndicator();
+    window.addEventListener("resize", updateIndicator);
 
     return () => {
-      window.removeEventListener("hashchange", handleHashChange);
+      window.removeEventListener("resize", updateIndicator);
+    };
+  }, [activeSection]);
+
+  useEffect(() => {
+    const mainContent = document.querySelector<HTMLElement>(".main-content");
+
+    if (!mainContent) {
+      return;
+    }
+
+    const handleScroll = () => {
+      const activationPoint =
+        mainContent.getBoundingClientRect().top +
+        mainContent.clientHeight * 0.3;
+      const currentSection = [...navigationItems].reverse().find((item) => {
+        const target = document.getElementById(item.target);
+        return (
+          target !== null &&
+          target.getBoundingClientRect().top <= activationPoint
+        );
+      });
+
+      setActiveSection(currentSection?.id ?? "dashboard");
+    };
+
+    mainContent.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      mainContent.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  const handleNavigation = (section: Section) => {
-    setActiveSection(section);
-  };
 
   return (
     <aside className="sidebar">
@@ -110,7 +149,16 @@ function Sidebar() {
         </div>
       </div>
 
-      <nav className="sidebar-nav" aria-label="Primary navigation">
+      <nav
+        ref={navigationRef}
+        className="sidebar-nav"
+        aria-label="Primary navigation"
+      >
+        <span
+          ref={activeIndicatorRef}
+          className="sidebar-active-indicator"
+          aria-hidden="true"
+        />
         <span className="nav-label">OPERATIONS</span>
 
         {navigationItems.map((item) => (
@@ -122,7 +170,6 @@ function Sidebar() {
               activeSection === item.id ? "nav-item active" : "nav-item"
             }
             aria-current={activeSection === item.id ? "page" : undefined}
-            onClick={() => handleNavigation(item.id)}
           >
             <span className="nav-icon">{item.icon}</span>
 
