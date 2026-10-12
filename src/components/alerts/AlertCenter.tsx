@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { createPortal } from "react-dom";
+import { useEffect, useMemo, useState } from "react";
 import {
   AlertIcon,
   CheckIcon,
@@ -41,7 +42,6 @@ function AlertCenter() {
 
   const [filter, setFilter] = useState<Filter>("all");
 
-  // IMPORTANT:
   // Only one alert is shown initially.
   // The user can expand the list when needed.
   const [showAllAlerts, setShowAllAlerts] = useState(false);
@@ -56,6 +56,34 @@ function AlertCenter() {
     "ALT-001": ["sms", "telegram"],
     "ALT-002": ["telegram"],
   });
+
+  /*
+   * Lock the dashboard behind the modal.
+   *
+   * Also allow Escape to close the modal.
+   */
+  useEffect(() => {
+    if (!selectedAlert) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelectedAlert(null);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedAlert]);
 
   const filteredAlerts = useMemo(() => {
     return alerts.filter((alert) => {
@@ -82,7 +110,7 @@ function AlertCenter() {
   /*
    * SHOW ONE ALERT BY DEFAULT.
    *
-   * This fixes the problem where the Alert Center becomes too long.
+   * This keeps the Alert Center compact.
    */
   const visibleAlerts = showAllAlerts
     ? filteredAlerts
@@ -373,23 +401,22 @@ function AlertCenter() {
         )}
       </div>
 
-      {/* MODAL */}
-      {selectedAlert && (
-        <AlertDetailsModal
-          alert={selectedAlert}
-          onClose={() => setSelectedAlert(null)}
-          onAcknowledge={() => acknowledgeAlert(selectedAlert.id)}
-          onResolve={() => resolveAlert(selectedAlert.id)}
-          onSend={() => sendAlert(selectedAlert)}
-        />
-      )}
+      {/* ALERT DETAILS MODAL */}
+      {selectedAlert &&
+        createPortal(
+          <AlertDetailsModal
+            alert={selectedAlert}
+            onClose={() => setSelectedAlert(null)}
+            onAcknowledge={() => acknowledgeAlert(selectedAlert.id)}
+            onResolve={() => resolveAlert(selectedAlert.id)}
+            onSend={() => sendAlert(selectedAlert)}
+          />,
+          document.body,
+        )}
     </section>
   );
 }
 
-/* =========================================================
-   ALERT CARD
-========================================================= */
 
 function AlertCard({
   alert,
@@ -560,7 +587,7 @@ function AlertCard({
 }
 
 /* =========================================================
-   DELIVERY STATUS
+DELIVERY STATUS
 ========================================================= */
 
 function DeliveryStatus({
@@ -593,7 +620,7 @@ function DeliveryStatus({
 }
 
 /* =========================================================
-   ALERT DETAILS MODAL
+ALERT DETAILS MODAL
 ========================================================= */
 
 function AlertDetailsModal({
@@ -610,8 +637,15 @@ function AlertDetailsModal({
   onSend: () => void;
 }) {
   return (
-    <div className="alert-modal-backdrop" onClick={onClose}>
-      <div className="alert-modal" onClick={(event) => event.stopPropagation()}>
+    <div className="alert-modal-backdrop" onClick={onClose} role="presentation">
+      <div
+        className="alert-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="alert-modal-title"
+        onClick={(event) => event.stopPropagation()}
+      >
+        {/* MODAL HEADER */}
         <div className="alert-modal-header">
           <div>
             <span className="eyebrow">ALERT INVESTIGATION</span>
@@ -622,7 +656,7 @@ function AlertDetailsModal({
               </div>
 
               <div>
-                <h3>{alert.title}</h3>
+                <h3 id="alert-modal-title">{alert.title}</h3>
 
                 <span className="modal-alert-id">{alert.id}</span>
               </div>
@@ -634,11 +668,13 @@ function AlertDetailsModal({
             className="modal-close"
             onClick={onClose}
             aria-label="Close alert details"
+            title="Close alert details"
           >
             <CloseIcon />
           </button>
         </div>
 
+        {/* DETAILS */}
         <div className="modal-details-grid">
           <div>
             <span>SEVERITY</span>
@@ -661,18 +697,21 @@ function AlertDetailsModal({
           </div>
         </div>
 
+        {/* DESCRIPTION */}
         <div className="modal-description">
           <span>EVENT DESCRIPTION</span>
 
           <p>{alert.description}</p>
         </div>
 
+        {/* INCIDENT */}
         <div className="modal-incident">
           <span>INCIDENT REFERENCE</span>
 
           <code>{alert.incidentUrl}</code>
         </div>
 
+        {/* NOTIFICATIONS */}
         <div className="modal-notifications">
           <span>DELIVERY STATUS</span>
 
@@ -683,6 +722,7 @@ function AlertDetailsModal({
           </div>
         </div>
 
+        {/* ACTIONS */}
         <div className="modal-actions">
           {alert.status === "open" && (
             <button
