@@ -15,6 +15,7 @@ import type {
   Report,
   User,
 } from "../types/dashboard";
+import { sendAlertNotification } from "./dashboardApi";
 
 export function getCameras(): Camera[] {
   return cameras;
@@ -43,17 +44,7 @@ export function getUsers(): User[] {
 export async function notifyAlert(
   request: AlertNotificationRequest,
 ): Promise<void> {
-  const response = await fetch(`/api/alerts/${request.alertId}/notify`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(request),
-  });
-
-  if (!response.ok) {
-    throw new Error("Notification request failed.");
-  }
+  await sendAlertNotification(request);
 }
 
 export function updateDetectionStatus(
