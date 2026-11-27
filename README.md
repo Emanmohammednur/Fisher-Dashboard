@@ -1,54 +1,71 @@
+
 # FISHER Dashboard
 
-FISHER is a responsive operations command center for CCTV monitoring, AI detection review, security alerts, operational statistics, reports, and user access management.
+**An AI-powered security operations command center for intelligent monitoring, detection review, and incident management.**
 
-It is currently a front-end MVP built for product demonstrations, stakeholder walkthroughs, and interaction design validation. The interface uses realistic mock data and local UI state; it does not yet connect to a production API or database.
+FISHER is a responsive security operations dashboard designed to bring CCTV monitoring, AI detection review, security alerts, operational analytics, reporting, and user access management into a unified interface.
 
-## Product Experience
+The project is currently a **frontend MVP** developed for product demonstrations, stakeholder walkthroughs, and interaction design validation. It uses realistic mock data and local UI state. It does not yet connect to a production API or database.
 
-The dashboard is organized around fast operational scanning:
+## Product Overview
 
-- **Dashboard:** high-level camera, availability, and alert metrics
-- **Live CCTV:** camera availability cards with online/offline states and expandable feeds
-- **Alert Center:** unread, new, acknowledged, critical, and resolved alert workflows
-- **Detection Results:** filterable detection review with severity and status actions
-- **Statistics:** severity distribution, totals, percentages, and detection detail views
-- **Reports:** generated report summaries with status and detail views
-- **User Management:** user creation, role management, status controls, and detail views
+FISHER is structured around the operational workflows of a centralized security monitoring environment.
 
-The sidebar follows the operational order `Dashboard`, `Live CCTV`, `Alert Center`, `Detection Results`, `Statistics`, `Reports`, and `User Management`. Navigation uses URL hash targets, so sections remain linkable and browser navigation stays predictable.
+### Core Modules
 
-## Alert Operations
+| Module | Description |
+|---|---|
+| Dashboard | High-level overview of camera availability, operational metrics, and security alerts. |
+| Live CCTV | Camera availability cards with online/offline states and expandable feed views. |
+| Alert Center | Centralized alert management with unread, new, acknowledged, critical, and resolved states. |
+| Detection Results | Filterable detection records with severity indicators and status management. |
+| Statistics | Operational metrics, severity distribution, percentages, and detection details. |
+| Reports | Report summaries with status tracking and detailed views. |
+| User Management | User creation, role management, account status controls, and user details. |
 
-Alert Center is the most interactive workflow in the prototype. Operators can:
+The sidebar follows an operational navigation sequence:
 
-- filter alerts by all, new, acknowledged, or critical status
-- mark individual alerts or all alerts as read
-- acknowledge and resolve alerts
-- open a detailed investigation modal
-- select SMS and Telegram notification channels
-- track notification states: ready, sending, sent, or failed
+`Dashboard → Live CCTV → Alert Center → Detection Results → Statistics → Reports → User Management`
 
-The notification action currently calls `/api/alerts/:id/notify`. A backend endpoint is required for delivery to work in a deployed environment; the UI gracefully represents request failures.
+Navigation uses URL hash targets to keep sections linkable and browser navigation predictable.
 
-## Interface System
+## Alert Management
 
-- Responsive fixed sidebar with independent navigation scrolling
-- Desktop and mobile layouts for operational use
-- Persistent light/dark theme preference through `localStorage`
-- Ethiopian-inspired green, yellow, and red status accents
-- Accessible focus states and semantic buttons/links
-- Consistent card surfaces, status badges, empty states, and detail modals
-- Compact mobile typography designed for narrow dashboard views
+The Alert Center provides the prototype's primary interactive incident-management workflow.
 
-## Technology
+Operators can:
 
-- React 19
-- TypeScript
-- Vite
-- Custom CSS design system
-- Mock service layer for local dashboard data
-- Oxlint for static analysis
+- Filter alerts by all, new, acknowledged, or critical status.
+- Mark individual alerts or all alerts as read.
+- Acknowledge and resolve alerts.
+- Open detailed investigation modals.
+- Select SMS and Telegram notification channels.
+- View notification states: ready, sending, sent, or failed.
+
+The notification interface is designed to communicate delivery status through the `/api/alerts/:id/notify` endpoint. Actual notification delivery requires a connected backend service. The interface represents request failures gracefully.
+
+## Interface & Design System
+
+The dashboard follows a responsive security operations interface designed for clarity, accessibility, and efficient information scanning.
+
+- Responsive fixed sidebar with independent navigation scrolling.
+- Desktop and mobile layouts.
+- Persistent light and dark themes using `localStorage`.
+- Ethiopian-inspired green, yellow, and red status accents.
+- Accessible focus states and semantic buttons and links.
+- Consistent card surfaces, status indicators, empty states, and detail modals.
+- Compact mobile typography for narrow dashboard layouts.
+
+## Technology Stack
+
+| Technology | Purpose |
+|---|---|
+| React 19 | Component-based user interface |
+| TypeScript | Static typing and maintainable application code |
+| Vite | Development server and production build tooling |
+| Custom CSS | Responsive styling and design system |
+| Mock Service Layer | Local dashboard data access |
+| Oxlint | Code quality and static analysis |
 
 ## Project Structure
 
@@ -58,21 +75,21 @@ fisher-dashboard/
 ├── src/
 │   ├── assets/
 │   ├── components/
-│   │   ├── alerts/       Alert Center and investigation workflow
-│   │   ├── cctv/         Camera feed cards
-│   │   ├── common/       Shared icons and UI primitives
-│   │   ├── detections/   Detection review tables and details
-│   │   ├── layout/       App shell, sidebar, and top bar
-│   │   ├── reports/      Report generation and details
-│   │   ├── statistics/   Metrics and severity analysis
-│   │   └── users/        User and access management
-│   ├── data/             Mock cameras, detections, alerts, users, reports
-│   ├── pages/            Dashboard composition and section wiring
-│   ├── services/         Data access facade for the mock layer
-│   ├── types/            Shared TypeScript domain models
+│   │   ├── alerts/
+│   │   ├── cctv/
+│   │   ├── common/
+│   │   ├── detections/
+│   │   ├── layout/
+│   │   ├── reports/
+│   │   ├── statistics/
+│   │   └── users/
+│   ├── data/
+│   ├── pages/
+│   ├── services/
+│   ├── types/
 │   ├── App.tsx
 │   ├── App.css
-│   ├── index.css         Global layout, themes, responsive design
+│   ├── index.css
 │   └── main.tsx
 ├── index.html
 ├── package.json
@@ -83,99 +100,96 @@ fisher-dashboard/
 
 ## Getting Started
 
-### Requirements
+### Prerequisites
 
 - Node.js 18 or newer
 - npm
 
-### Install
+### Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Emanmohammednur/Fisher-Dashboard.git
+```
+
+Navigate to the project directory:
+
+```bash
+cd Fisher-Dashboard
+```
+
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-### Start development
+### Development
+
+Start the local development server:
 
 ```bash
 npm run dev
 ```
 
-Open the local URL printed by Vite, usually `http://localhost:5173`.
+Open the local URL provided by Vite, usually `http://localhost:5173`.
 
-### Production build
+### Production Build
 
 ```bash
 npm run build
 ```
 
-### Preview the production build
+### Preview Production Build
 
 ```bash
 npm run preview
 ```
 
-### Lint
+### Code Quality
 
 ```bash
 npm run lint
 ```
 
-### Unit and component tests
+## Data Architecture
 
-```bash
-npm test
-```
+The prototype uses a lightweight mock-data architecture:
 
-Run the unit suite in watch mode while developing:
+- `src/data/dashboardData.ts` contains mock domain data.
+- `src/services/dashboardService.ts` provides the data access layer.
+- `src/types/dashboard.ts` defines shared TypeScript contracts.
 
-```bash
-npm run test:watch
-```
+This separation allows the mock service layer to be replaced with production API integrations while maintaining the existing component structure and dashboard workflows.
 
-### Browser smoke tests
+## Current Status & Future Development
 
-Install the local Chromium runtime once:
+FISHER is currently a frontend MVP focused on demonstrating security operations workflows and validating the dashboard experience.
 
-```bash
-npx playwright install chromium
-```
+Potential next development stages include:
 
-Then run the desktop and mobile browser checks:
+- Real-time CCTV stream integration.
+- AI-powered object and activity detection.
+- Backend API and database integration.
+- Real-time security alerts and notification delivery.
+- Authentication and role-based access control.
+- Expanded analytics and reporting.
+- Automated component and browser testing.
 
-```bash
-npm run test:e2e
-```
+## Quality & Validation
 
-The Playwright suite checks the desktop and mobile dashboard shell, theme switching, and sidebar visibility.
-
-## Data Boundary
-
-Mock domain data lives in `src/data/dashboardData.ts` and is exposed through `src/services/dashboardService.ts`. Shared contracts live in `src/types/dashboard.ts`.
-
-The current prototype intentionally keeps the data layer lightweight. A production implementation can replace the service functions with API calls while preserving the component contracts and dashboard workflows.
-
-## Quality Notes
-
-The project is optimized for:
-
-- product and stakeholder demos
-- responsive UI validation
-- operational workflow prototyping
-- future API and authentication integration
-
-Before production deployment, connect the notification endpoint, add authentication and role-based access control, replace mock data with a resilient data source, and add automated component and browser tests.
-
-The current validation path is:
+The current project supports the following validation commands:
 
 ```bash
 npm run lint
-npm test
-npm run test:e2e
 npm run build
 ```
 
-The repository also includes a GitHub Actions workflow at `.github/workflows/ci.yml` that installs the browser runtime and runs the complete validation path on pushes and pull requests.
+These commands provide static code analysis and production build verification.
+
+Additional automated testing can be introduced as the application evolves.
 
 ## License
 
-This project is intended for educational, demonstration, and product-design use.
+This project is intended for educational, demonstration, and product-design purposes.
